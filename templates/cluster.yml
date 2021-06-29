@@ -1,0 +1,13 @@
+#Making the headless service 
+apiVersion: v1
+kind: Service
+metadata:
+        name: "clusterip"
+spec:
+      selector:
+              name: sql
+      type: ClusterIP
+      clusterIP: None
+      ports:
+      - name: database
+        port: 3306

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+        name: "npwp"
+spec:
+     selector:
+            name: wp
+     ports:
+     - targetPort: 80
+       port: 8080
+       nodePort: 30001
+     type: NodePort
+       

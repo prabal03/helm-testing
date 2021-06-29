@@ -1,0 +1,54 @@
+#------------Sql yaml file----------------- 
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+        name: "database"
+spec:
+      replicas: 3
+      selector:
+              matchLabels:
+                      name: sql
+      serviceName: clusterip                
+      template:
+              metadata:
+                      name: "databasepod"
+                      labels:
+                              name: sql
+              spec:
+                  containers:
+                  - name: "dcont"
+                    image: mysql:5.7
+                    env:
+                    - name: "MYSQL_ROOT_PASSWORD"
+                      valueFrom:
+                          secretKeyRef:
+                                  name: sql-secret
+                                  key: p
+                    - name: "MYSQL_DATABASE"
+                      value: wordpress
+                    - name: "MYSQL_USER"
+                      value: prabal
+                    - name: "MYSQL_PASSWORD"
+                      valueFrom:
+                            secretKeyRef:
+                                  name: sql-secret
+                                  key: q
+                    volumeMounts:
+                    - name: data
+                      mountPath: /var/lib/mysql
+                    - name: sql-config-map
+                      mountPath: /mnt/config-map              
+                  volumes:
+                  - name: sql-config-map
+                    configMap:
+                            name: mysql
+      volumeClaimTemplates:
+      - metadata: 
+                name: data
+        spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+                    requests:
+                          storage: 1Gi
+
+
