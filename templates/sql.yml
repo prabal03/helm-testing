@@ -38,7 +38,19 @@ spec:
                       name: {{ .Values.sql_pod_name }}
                     volumeMounts:
                     - name: sql-config-map
-                      mountPath: /mnt/config-map              
+                      mountPath: /mnt/config-map 
+                    readinessProbe:
+                      tcpSocket: 
+                         port: {{ .Values.port }}
+                      initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+                      failureThreshold: {{ .Values.failureThreshold }}
+                      periodSeconds: {{ .Values.periodSeconds }}     
+                    livenessProbe:    
+                      tcpSocket:
+                           port: {{ .Values.port }}
+                      initialDelaySeconds: {{ .Values.initialDelaySeconds }}
+                      failureThreshold:  {{ .Values.failureThreshold }}
+                      periodSeconds: {{ .Values.periodSeconds }}        
                   volumes:
                   - name: sql-config-map
                     configMap:

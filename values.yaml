@@ -23,7 +23,7 @@ wp_image: wordpress:5.1.1
 
 sql_kind: StatefulSet
 
-sql_name: Database
+sql_name: database
 
 sql_replicas: 3
 
@@ -80,3 +80,15 @@ secret_name: sql-secret
 secret_root_password: cHJhYmFs
 
 secret_sql_password: cHJhYmFs
+
+#------------------------------------
+#Liveness & Readiness Probe
+#------------------------------------
+
+port: 3306
+
+initialDelaySeconds: 7
+
+failureThreshold: 5
+
+periodSeconds: 10

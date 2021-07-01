@@ -23,10 +23,17 @@ spec:
                      value: {{ .Values.mysql_user }}
                    - name: "WORDPRESS_DB_PASSWORD"
                      valueFrom:
-                         secretKeyRef:
-                                 name: {{ .Values.secret_name }}
-                                 key: {{ .Values.secret_sql_password }}
+                        secretKeyRef:
+                                name: {{ .Values.secret_name }}
+                                key: sql
                            
                    - name: "WORDPRESS_DB_NAME"
-                     value: {{ .Values.mysql_user }}
+                     value: {{ .Values.mysql_database }}
+                   readinessProbe:
+                      exec:
+                        command:
+                        - curl
+                        - database-0.clusterip.default.svc.cluster.local:3306
+                      initialDelaySeconds: 5
+                      periodSeconds: 5
                            

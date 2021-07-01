@@ -7,7 +7,7 @@ spec:
             name: {{ .Values.wp_pod_label }}
      ports:
      - targetPort: {{ .Values.nodeport_target_port }}
-       port: {{ .Values.sql_cont_port }}
+       port: {{ .Values.sql_container_port }}
        nodePort: {{ .Values.nodeport }}
      type: NodePort
        
