@@ -1,28 +1,32 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ .Values.wp_kind }}
 metadata: 
-    name: wordpress
+    name: {{ .Values.wp_name }}
 spec:
-      replicas: 2
+      replicas: {{ .Values.wp_replicas }}
       selector:
               matchLabels:
-                      name: wp
+                      name: {{ .Values.wp_pod_label }}
       template:
               metadata:
-                      name: "wpod"
+                      name: {{ .Values.wp_pod_name }}
                       labels:
-                            name: wp
+                            name: {{ .Values.wp_pod_label }}
               spec:  
                  containers:
-                 - name: "wpcont"
-                   image: wordpress:5.1.1
+                 - name: {{ .Values.wp_container_name }}
+                   image: {{ .Values.wp_image }}
                    env: 
                    - name: "WORDPRESS_DB_HOST"
-                     value: clusterip.default.svc.cluster.local:8080
+                     value: database-0.clusterip.default.svc.cluster.local:3306
                    - name: "WORDPRESS_DB_USER"  
-                     value: prabal
+                     value: {{ .Values.mysql_user }}
                    - name: "WORDPRESS_DB_PASSWORD"
-                     value: prabal
+                     valueFrom:
+                         secretKeyRef:
+                                 name: {{ .Values.secret_name }}
+                                 key: {{ .Values.secret_sql_password }}
+                           
                    - name: "WORDPRESS_DB_NAME"
-                     value: wordpress
+                     value: {{ .Values.mysql_user }}
                            

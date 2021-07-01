@@ -1,54 +1,47 @@
-#------------Sql yaml file----------------- 
+#------------Sql yaml file-----------------#
 apiVersion: apps/v1
-kind: StatefulSet
+kind: {{ .Values.sql_kind }}
 metadata:
-        name: "database"
+        name: {{ .Values.sql_name }}
 spec:
-      replicas: 3
+      replicas: {{ .Values.sql_replicas }}
       selector:
               matchLabels:
-                      name: sql
+                      name: {{ .Values.sql_pod_labels }}
       serviceName: clusterip                
       template:
               metadata:
-                      name: "databasepod"
+                      name: {{ .Values.sql_pod_name }}
                       labels:
-                              name: sql
+                              name: {{ .Values.sql_pod_labels }}
               spec:
                   containers:
-                  - name: "dcont"
-                    image: mysql:5.7
+                  - name: {{ .Values.sql_container_name }}
+                    image: {{ .Values.sql_image }}
                     env:
                     - name: "MYSQL_ROOT_PASSWORD"
                       valueFrom:
-                          secretKeyRef:
-                                  name: sql-secret
-                                  key: p
+                         secretKeyRef:
+                                 name: {{ .Values.secret_name }}
+                                 key: root
                     - name: "MYSQL_DATABASE"
-                      value: wordpress
+                      value: {{ .Values.mysql_database }}
                     - name: "MYSQL_USER"
-                      value: prabal
+                      value: {{ .Values.mysql_user }}
                     - name: "MYSQL_PASSWORD"
                       valueFrom:
-                            secretKeyRef:
-                                  name: sql-secret
-                                  key: q
+                        secretKeyRef:                                      
+                           name: {{ .Values.secret_name }}
+                           key: sql                     
+                    ports:
+                    - containerPort: {{ .Values.sql_container_port }}
+                      name: {{ .Values.sql_pod_name }}
                     volumeMounts:
-                    - name: data
-                      mountPath: /var/lib/mysql
                     - name: sql-config-map
                       mountPath: /mnt/config-map              
                   volumes:
                   - name: sql-config-map
                     configMap:
-                            name: mysql
-      volumeClaimTemplates:
-      - metadata: 
-                name: data
-        spec:
-            accessModes: ["ReadWriteOnce"]
-            resources:
-                    requests:
-                          storage: 1Gi
+                            name: {{ .Values.configmap_name }}
 
 

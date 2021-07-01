@@ -4,10 +4,10 @@ metadata:
         name: "npwp"
 spec:
      selector:
-            name: wp
+            name: {{ .Values.wp_pod_label }}
      ports:
-     - targetPort: 80
-       port: 8080
-       nodePort: 30001
+     - targetPort: {{ .Values.nodeport_target_port }}
+       port: {{ .Values.sql_cont_port }}
+       nodePort: {{ .Values.nodeport }}
      type: NodePort
        
